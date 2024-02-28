@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Storage local og sessions</title>
+  </head>
+  <body>
+    <h1 id="name-txt">Ditt navn er: ukjent</h1>
+    <input type="button" id="add-btn" value="legge til bruker" />
+    <input type="button" id="delete-btn" value="sletter bruker" />
+    <script>
+      const nameTxt = document.getElementById("name-txt");
+      const addBtn = document.getElementById("add-btn");
+      const deleteBtn = document.getElementById("delete-btn");
+
+      nameTxt.innerHTML = `Ditt navn er: ${localStorage.getItem("name")}`;
+
+      addBtn.onclick = addName;
+      deleteBtn.onclick = deleteName;
+
+      function addName() {
+        const userName = prompt("hva heter du?");
+        console.log(userName);
+        localStorage.setItem("name", userName);
+
+        updateName();
+      }
+
+      function deleteName() {
+        localStorage.removeItem("name");
+
+        updateName();
+      }
+
+      function updateName() {
+        if (localStorage.length <= 0) {
+          nameTxt.innerHTML = `ditt navn er ukjent, legg inn brukernavn`;
+        } else {
+          nameTxt.innerHTML = `Ditt navn er: ${localStorage.getItem("name")}`;
+        }
+      }
+    </script>
+  </body>
+</html>
