@@ -11,7 +11,7 @@
     <div id="saved-activities-container"></div>
     <script>
       const activityContainer = document.getElementById("activity-container");
-      const savedActivities = document.getElementById(
+      const savedActivitiesContainer = document.getElementById(
         "saved-activities-container"
       );
 
@@ -19,7 +19,7 @@
 
       async function fetchActivity() {
         const request = await fetch("http://www.boredapi.com/api/activity/");
-        const response = request.json();
+        const response = await request.json();
 
         return response;
       }
@@ -28,6 +28,7 @@
         try {
           const activity = await fetchActivity();
           showActivity(activity);
+          showSavedActivities();
         } catch {
           console.log("klarte ikke hente aktivitet...");
         }
@@ -51,7 +52,8 @@
         saveBtn.addEventListener("click", function () {
           savedActivity(activity);
         });
-        activity.append(text, saveBtn);
+
+        activityCard.append(text, saveBtn);
         activityContainer.append(activityCard);
       }
 
@@ -63,29 +65,46 @@
 
         localStorage.setItem("savedActivities", JSON.stringify(activities));
 
-        showSavedActivity();
+        showSavedActivities();
       }
 
-      function showSavedActivity() {
+      function showSavedActivities() {
         console.log("lagre aktivitet");
         activities = JSON.parse(localStorage.getItem("savedActivities")) || [];
 
         savedActivitiesContainer.innerHTML = "";
-        //tømmer containeren før den fylles på nytt, duplikasjoner neitakk
+        //tømmer containeren før den fylles på nytt, duplikasjoner neitakk!
 
         activities.forEach((activity, index) => {
           const savedActivityCard = document.createElement("div");
           const savedText = document.createElement("h4");
-          savedText.innerHTML = "Aktivitet:" + activity.activity;
+          savedText.innerHTML = "Activity:" + activity.activity;
 
-          savedActivityCard.style.backgroundColor = "light green";
+          savedActivityCard.style.backgroundColor = "lightgreen";
           savedActivityCard.style.width = "200px";
           savedActivityCard.style.height = "200px";
           savedActivityCard.style.border = "1px solid black";
 
-          savedActivityCard.append(savedText);
+          const deleteBtn = document.createElement("button");
+          deleteBtn.innerHTML = "Slett";
+          deleteBtn.addEventListener("click", function () {
+            deleteActivity(index);
+          });
+
+          savedActivityCard.append(savedText, deleteBtn);
           savedActivitiesContainer.append(savedActivityCard);
         });
+      }
+
+      function deleteActivity(index) {
+        const activities =
+          JSON.parse(localStorage.getItem("savedActivities")) || [];
+
+        activities.splice(index, 1);
+
+        //husk å gjør det om til string siden det er det eneste som funker med localStorage
+        localStorage.setItem("savedActivities", JSON.stringify(activities));
+        showSavedActivities();
       }
     </script>
   </body>
