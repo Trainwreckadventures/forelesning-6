@@ -14,14 +14,11 @@
       const addBtn = document.getElementById("add-btn");
       const deleteBtn = document.getElementById("delete-btn");
 
-      nameTxt.innerHTML = `Ditt navn er: ${localStorage.getItem("name")}`;
-
       addBtn.onclick = addName;
       deleteBtn.onclick = deleteName;
 
       function addName() {
         const userName = prompt("hva heter du?");
-        console.log(userName);
         localStorage.setItem("name", userName);
 
         updateName();
@@ -40,6 +37,8 @@
           nameTxt.innerHTML = `Ditt navn er: ${localStorage.getItem("name")}`;
         }
       }
+
+      updateName();
     </script>
   </body>
 </html>
